@@ -1,0 +1,458 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+  <title>Práctica 2: Se&ntilde;ales en tiempo discreto</title>
+  <meta name="generator" content="MATLAB 9.7">
+  <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+  <meta name="DC.date" content="2020-12-06">
+  <meta name="DC.source" content="Untitled.m">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <header class="header" id="main-header">
+    <div class="barra container">
+      <h1>Práctica 2: Se&ntilde;ales en tiempo discreto</h1>
+
+      <div class="integrantes">
+        <p>López Aguado Ana Isabel</p>
+        <p>Hernández Ahumada José Luis</p>
+        <p>Pérez Navarro Fernando</p>
+        <p>Ramírez Miranda Luis Javier</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="content container">
+    <!--introduction-->
+    <!--/introduction-->
+    <h2>Contenido de la práctica</h2>
+    <div class="index">
+      <ul>
+        <li><a href="#0">Introducción</a></li>
+        <li><a href="#1"><span>1.-</span> Problema 3.11-2</a></li>
+        <li><a href="#3"><span>2.-</span> Problema 3.2-7</a></li>
+        <li><a href="#10"><span>3.-</span> Lathi 3.11-6</a></li>
+        <li><a href="#14"><span>4.-</span> Lathi 3.1-1 c) y Lathi 3.1-2 b) usando 3</a></li>
+        <li><a href="#23"><span>5.-</span> Aplicación</a></li>
+      </ul>
+    </div>
+    <h2 id="0">Introducción</h2>
+    <p>Objetivos de la Práctica</p>
+    <div class="list">
+      <ul>
+        <li>Manipulación básica de MATLAB</li>
+        <li>Gráficas de señales reales y complejas discretas</li>
+        <li>Transformación de señales discretas (escalamientos y traslaciones)</li>
+      </ul>
+    </div>
+    <p>Al igual que en la Práctica 1 se utilizó Python para resolver un problema, en este caso se resolvió el primer
+      problema de la práctica correspondiente con el problema 3.11-2 de Lathi versión clase, a continuación se muestra
+      una imágen evidencia de los resultados y el código fuente se puede checar en el siguiente <a
+        href="https://colab.research.google.com/drive/1fZG4o3fhvHfysG_0GZx4bNLkLvQLzt6s?usp=sharing" target="_blank"
+        class="enlace"><span class="senlace">enlace</span></a></p>
+    <img src="python.png" alt="Python">
+    <h2 id="1">1.- Problema 3.11-2</h2>
+    <p>Considerar la funci&oacute;n de tiempo discreto <img src="Untitled_eq15597128989680838254.png"
+        alt="$$f[n] = e^{-n/5}cos(\pi n/5)u[n]$">. En MATLAB se usan funciones an&oacute;nimas para describir estas
+      funciones.</p>
+    <pre class="codeinput">f = @(n) exp(-n/5).*cos(pi*n/5).*(n&gt;=0);
+</pre>
+    <p>Esta funci&oacute;n an&oacute;nima trabaja correctamente para escalamientos horizontales mayores a 1, como en
+      f[2n]; pero no lo hace correctamente cuando el escalamiento es menor a 1, como en f[n/2]. Modificar la
+      funci&oacute;n an&oacute;nima para obetener las gr&aacute;ficas correctas. Prueba la modificaci&oacute;n
+      graficando f(n/2) en el intervalo (-10&lt;=n&lt;=10).</p>
+    <pre class="codeinput">f = @(n) exp(-n/5).*cos(pi*n/5).*(n&gt;=0);
+n = (-10:10);
+stem(n,f(n),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'f[n]'</span>);
+stem(n,f(2*n),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'f[2n]'</span>);
+<span class="comment">%Funci&oacute;n original%</span>
+f = @(n) exp(-n/5).*cos(pi*n/5).*(n&gt;=0);
+<span class="comment">%Par&aacute;metro de escalamiento 1/a%</span>
+a = 2;
+<span class="comment">%Arreglo con los m&uacute;ltiplos del par&aacute;metro de escalamiento%</span>
+n1 = n(1,mod(n,a)==0):a:n(1,length(n));
+<span class="comment">%Funci&oacute;n escalada%</span>
+stem(n1,f(n1/a),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'f[n/2]'</span>);
+</pre><img vspace="5" hspace="5" src="Untitled_01.png" alt="">
+    <h2 id="3">2.- Problema 3.2-7</h2>
+    <p>Desde la se&ntilde;al en la figura P3.1-1b, graficar:</p>
+    <p><span>(a)</span> x[-n]</p>
+    <p><span>(b)</span> x[n+6]</p>
+    <p><span>(c)</span> x[n-6]</p>
+    <p><span>(d)</span> x[3n]</p>
+    <p><span>(e)</span> x[n/3]</p>
+    <p><span>(f)</span> x[3-n]</p>
+    <pre class="codeinput">f = @(n) n.*(u(n)-u(n-4)) + (-n+6).*(u(n-4)-u(n-7));
+u = @(n) 1.0.*(n&gt;=0);
+n = (-30:30);
+stem(n,f(n),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+title(<span class="string">'Fig. P3.1-1b'</span>);
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'x[n]'</span>);
+axis([-2 9 -1 4]);
+</pre><img vspace="5" hspace="5" src="Untitled_02.png" alt="">
+    <p><span>(a)</span> x[-n]</p>
+    <pre class="codeinput">stem(n,f(-n),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'x[-n]'</span>);
+axis([-9 2 -1 4]);
+</pre><img vspace="5" hspace="5" src="Untitled_03.png" alt="">
+    <p><span>(b)</span> x[n+6]</p>
+    <pre class="codeinput">stem(n,f(n+6),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'x[n+6]'</span>);
+axis([-8 4 -1 4]);
+</pre><img vspace="5" hspace="5" src="Untitled_04.png" alt="">
+    <p><span>(c)</span> x[n-6]</p>
+    <pre class="codeinput">stem(n,f(n-6),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'x[n-6]'</span>);
+axis([4 15 -1 4]);
+</pre><img vspace="5" hspace="5" src="Untitled_05.png" alt="">
+    <p><span>(d)</span> x[3n]</p>
+    <pre class="codeinput">stem(n,f(3*n),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'x[3n]'</span>);
+axis([-5 5 -1 5]);
+</pre><img vspace="5" hspace="5" src="Untitled_06.png" alt="">
+    <p><span>(e)</span> x[n/3]</p>
+    <pre class="codeinput"><span class="comment">%Par&aacute;metro de escalamiento 1/a%</span>
+a = 3;
+<span class="comment">%Arreglo con los m&uacute;ltiplos del par&aacute;metro de escalamiento%</span>
+n1 = n(1,mod(n,a)==0):a:n(1,length(n));
+<span class="comment">%Funci&oacute;n escalada%</span>
+stem(n1,f(n1/a),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'x[n/3]'</span>);
+axis([-4 20 -1 4]);
+</pre><img vspace="5" hspace="5" src="Untitled_07.png" alt="">
+    <p><span>(f)</span> x[3-n]</p>
+    <pre class="codeinput">stem(n,f(3-n),<span class="string">'k'</span>);
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+plano.Box = <span class="string">"off"</span>;
+xlabel(<span class="string">'n'</span>);
+ylabel(<span class="string">'x[3-n]'</span>);
+axis([-5 5 -1 4]);
+</pre><img vspace="5" hspace="5" src="Untitled_08.png" alt="">
+    <h2 id="10">3.- Lathi 3.11-6</h2>
+    <p>Suponga que ya existe un vector x en MATLAB correspondiente a una se&ntilde;al en tiempo discreto de duracion
+      finita</p>
+    <p><span>(a)</span> Escribe una funci&oacute;n en MATLAB que, pasandole el vector x , calcule y retorne Ex la
+      energ&iacute;a
+      de x[n]</p>
+    <pre class="language-matlab"><span class="keyword">function</span> [Ex] = Ex(x)
+x=x.^2;
+Ex=sum(x);
+<span class="keyword">end</span>
+</pre>
+    <p><span>(b)</span> Escribe una funci&oacute;n en MATLAB que, pasandole el vector x , calcule y retorne Px, la
+      potencia de x[n],
+      asuma que x[n] es periodica y que el vector x contiene la informacion de un periodo entero de x[n]</p>
+    <pre class="language-matlab"><span class="keyword">function</span> [Px] = Px(x)
+n=length(x);
+x=x.^2;
+Px=sum(x)/n;
+<span class="keyword">end</span>
+</pre>
+    <h2 id="14">4.- Lathi 3.1-1 c) y Lathi 3.1-2 b) usando 3.-</h2>
+    <p><span>3.1-1 c)</span> Calcule la energ&iacute;a de la se&ntilde;al</p>
+    <pre class="codeinput">n=(-4:1:4);
+x=[0,-9,-6,-3,0,3,6,9,0];
+stem(n,x)
+grid <span class="string">on</span>
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+</pre><img vspace="5" hspace="5" src="Untitled_09.png" alt="">
+    <p>se puede observar que nuestro vector x=[0,-9,-6,-3,0,3,6,9,0] por lo que usando la funci&oacute;no creada
+      anteriormente podremos saber el resultado de la energ&iacute;a de esta se&ntilde;al</p>
+    <pre class="codeinput">Ex(x)
+</pre>
+    <pre class="codeoutput">
+ans =
+
+   252
+
+</pre>
+    <p><span>3.1-2 b)</span> Calcule la potencia de la se&ntilde;al</p>
+    <pre class="codeinput">n=(-3:1:15);
+x=[-3,-2,-1,0,1,2,3,0,0,0,0,0,-3,-2,-1,0,1,2,3];
+stem(n,x)
+grid <span class="string">on</span>
+plano = gca;
+plano.XAxisLocation = <span class="string">"origin"</span>;
+plano.YAxisLocation = <span class="string">"origin"</span>;
+</pre><img vspace="5" hspace="5" src="Untitled_10.png" alt="">
+    <p>Se puede observar que nuestro vector x=[-3,-2,1,0,1,2,3,0,0,0,0,0] por lo que usando la funci&oacute;n creada se
+      puede calcular</p>
+    <pre class="codeinput">x=[-3,-2,-1,0,1,2,3,0,0,0,0,0];
+Px(x)
+</pre>
+    <pre class="codeoutput">
+ans =
+
+    2.3333
+
+</pre>
+    <h2 id="23">5.- Aplicación en MATLAB</h2>
+    <p>En el siguiente apartado se deja como evidencia de que se realizo una aplicación para poder gráficar los
+      problemas realizados a lo largo de esta práctica. Dicha aplicación también cuenta con la opción de gráficar
+      señales en tiempo discreto ingresadas por el usuario recuerde seguir las instrucciones especificadas dentro de la
+      aplicación para su óptimo funcionamiento. La aplicación se puede descargar a través del siguiente <a
+        href="https://drive.google.com/drive/folders/18u5D5n-FQjc0ykXD4c1LQtKLYsY18OAQ?usp=sharing" target="_blank"
+        class="enlace"><span class="senlace">enlace</span></a></p>
+    <img src="app1.jpeg" alt="app1">
+    <img src="app2.jpeg" alt="app2">
+    <img src="app3.jpeg" alt="app3">
+    <img src="app4.jpeg" alt="app4">
+    <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br>
+    </p>
+  </div>
+  <!--
+##### SOURCE BEGIN #####
+%% Practica 2: Señales en tiempo discreto
+%% 1.- Problema 3.11-2 
+%
+% Considerar la función de tiempo discreto $$f[n] = e^{-n/5}cos(\pi
+% n/5)u[n]$. En MATLAB se usan funciones anónimas para describir estas funciones.
+
+f = @(n) exp(-n/5).*cos(pi*n/5).*(n>=0);
+
+%%
+% Esta función anónima trabaja correctamente para escalamientos horizontales  
+% mayores a 1, como en f[2n];  pero no lo hace correctamente cuando el escalamiento 
+% es  menor a 1, como en f[n/2]. Modificar la función anónima para obetener las gráficas 
+% correctas. Prueba la modificación graficando f(n/2) en el intervalo (-10<=n<=10).
+
+f = @(n) exp(-n/5).*cos(pi*n/5).*(n>=0);
+n = (-10:10);
+stem(n,f(n),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('f[n]');
+stem(n,f(2*n),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('f[2n]');
+%Función original%
+f = @(n) exp(-n/5).*cos(pi*n/5).*(n>=0);
+%Parámetro de escalamiento 1/a%
+a = 2;
+%Arreglo con los múltiplos del parámetro de escalamiento%
+n1 = n(1,mod(n,a)==0):a:n(1,length(n));
+%Función escalada%
+stem(n1,f(n1/a),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('f[n/2]');
+%% 2.- Problema 3.2-7
+%
+%  Desde la señal en la figura  P3.1-1b, graficar:
+% (a) x[-n]
+% (b) x[n+6]
+% (c) x[n-6]
+% (d) x[3n]
+% (e) x[n/3]
+% (f) x[3-n]
+%
+%
+f = @(n) n.*(u(n)-u(n-4)) + (-n+6).*(u(n-4)-u(n-7));
+u = @(n) 1.0.*(n>=0);
+n = (-30:30);
+stem(n,f(n),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+title('Fig. P3.1-1b');
+xlabel('n');
+ylabel('x[n]');
+axis([-2 9 -1 4]);
+%%
+% (a) x[-n]
+stem(n,f(-n),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('x[-n]');
+axis([-9 2 -1 4]);
+%%
+% (b) x[n+6]
+stem(n,f(n+6),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('x[n+6]');
+axis([-8 4 -1 4]);
+%%
+% (c) x[n-6]
+stem(n,f(n-6),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('x[n-6]');
+axis([4 15 -1 4]);
+%%
+% (d) x[3n]
+stem(n,f(3*n),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('x[3n]');
+axis([-5 5 -1 5]);
+%%
+% (e) x[n/3]
+
+%Parámetro de escalamiento 1/a%
+a = 3;
+%Arreglo con los múltiplos del parámetro de escalamiento%
+n1 = n(1,mod(n,a)==0):a:n(1,length(n));
+%Función escalada%
+stem(n1,f(n1/a),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('x[n/3]');
+axis([-4 20 -1 4]);
+%%
+% (f) x[3-n]
+stem(n,f(3-n),'k');
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+plano.Box = "off";
+xlabel('n');
+ylabel('x[3-n]');
+axis([-5 5 -1 4]);
+%% 3.- Lathi 3.11-6
+% Suponga que ya existe un vector x en MATLAB correspondiente a una señal en tiempo discreto de duracion finita
+% a) Escribe una función en MATLAB que, pasandole el vector x , calcule y
+% retorne Ex la energía de x[n]
+%%
+%   function [Ex] = Ex(x)
+%   x=x.^2;
+%   Ex=sum(x);
+%   end
+%%
+% b) Escribe una función en MATLAB que, pasandole el vector x , calcule y
+% retorne Px, la potencia de x[n], asuma que x[n] es periodica y que el
+% vector x contiene la informacion de un periodo entero de x[n]
+%%
+%   function [Px] = Px(x)
+%   n=length(x);
+%   x=x.^2;
+%   Px=sum(x)/n;
+%   end
+
+%% 4.- Lathi 3.1-1 c) y Lathi 3.1-2 b) usando 3.-
+%  3.3-1 c) Calcule la energía de la señal
+
+n=(-4:1:4);
+x=[0,-9,-6,-3,0,3,6,9,0];
+stem(n,x)
+grid on
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+
+%%
+% se puede observar que nuestro vector x=[0,-9,-6,-3,0,3,6,9,0] por lo que
+% usando la funcióno creada anteriormente podremos saber el resultado de la
+% energía de esta señal
+
+Ex(x)
+
+
+%%
+% 3.1-2 b) Calcule la potencia de la señal 
+n=(-3:1:15);
+x=[-3,-2,-1,0,1,2,3,0,0,0,0,0,-3,-2,-1,0,1,2,3];
+stem(n,x)
+grid on
+plano = gca;
+plano.XAxisLocation = "origin";
+plano.YAxisLocation = "origin";
+
+%%
+% Se puede observar que nuestro vector
+% x=[-3,-2,1,0,1,2,3,0,0,0,0,0] por lo que usando la
+% función creada se puede calcular
+
+x=[-3,-2,-1,0,1,2,3,0,0,0,0,0];
+Px(x)
+##### SOURCE END #####
+-->
+</body>
+
+</html>
